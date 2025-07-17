@@ -223,7 +223,7 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-
+    firebase.firestore().settings({ experimentalForceLongPolling: true })
 
 
     const habilidades = [];
