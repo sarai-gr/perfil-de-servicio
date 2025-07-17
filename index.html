@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Perfil Profesional Mejorado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f1f5f9;
+      padding: 2rem;
+    }
+
+    .formulario {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .formulario h2 {
+      text-align: center;
+      color: #1e293b;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      font-weight: 500;
+      color: #475569;
+    }
+
+    .form-control {
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-ios {
+      width: 100%;
+      background: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 14px;
+      margin-top: 1rem;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+
+    .btn-ios:hover {
+      background: #1e40af;
+    }
+
+    .btn-skill {
+      background: #1e40af;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 500;
+      margin-left: 10px;
+    }
+
+    .skills-list {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .skills-list li {
+      background: #1e40af;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .card-preview {
+      display: none;
+      width: 800px; /* forzamos ancho horizontal */
+      margin: 3rem auto 1rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      background: #ffffff;
+      color: #1e293b;
+      border: 1px solid #d1d5db;
+    }
+
+    .card-header {
+      background: #1e3a8a;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .card-header h2 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-header .contact {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #1e40af;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-text {
+      font-size: 1rem;
+      color: #334155;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      }
+    
+    .preservar-saltos {
+      white-space: pre-line;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="formulario">
+    <h2>Perfil de Servicio</h2>
+    <form id="formulario" novalidate>
+      <div class="mb-3">
+        <label for="fullName" class="form-label">Nombre completo *</label>
+        <input type="text" class="form-control" id="fullName" required />
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">Teléfono *</label>
+        <input type="tel" class="form-control" id="phone" required />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Correo electrónico *</label>
+        <input type="email" class="form-control" id="email" required />
+      </div>
+      <div class="mb-3">
+        <label for="serviceTitle" class="form-label">Nombre del servicio *</label>
+        <input type="text" class="form-control" id="serviceTitle" required />
+      </div>
+      <div class="mb-3">
+        <label for="serviceDescription" class="form-label">Descripción del servicio *</label>
+        <textarea class="form-control" id="serviceDescription" rows="4" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="skillInput" class="form-label">Agregar habilidad</label>
+        <div class="d-flex">
+          <input type="text" class="form-control" id="skillInput" placeholder="Ej. Comunicación" />
+          <button type="button" class="btn-skill" onclick="agregarHabilidad()">Agregar</button>
+        </div>
+        <ul id="listaHabilidades" class="skills-list"></ul>
+      </div>
+      <button type="button" class="btn-ios" onclick="generarTarjeta()">Generar tarjeta como imagen</button>
+    </form>
+  </div>
+
+  <!-- Contenedor oculto girado para generar imagen horizontal -->
+  
+  <div id="visualCard" class="card-preview">
+    <div class="card-header">
+      <h2 id="cardName">Nombre Apellido</h2>
+      <div class="contact" id="cardContact">12345678 | correo@example.com</div>
+    </div>
+    <div class="card-body">
+      <div class="section-title" id="cardServiceTitle">Título del Servicio</div>
+      <div class="section-text preservar-saltos" id="cardServiceDescription">
+        Descripción detallada del servicio profesional ofrecido por el proveedor.
+      </div>
+      <div class="section-title" id="skillsTitle" style="display:none;">Habilidades</div>
+      <ul class="skills-list" id="cardSkills"></ul>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button id="btnDescargar" class="btn-ios" style="max-width: 300px; display: none;">Descargar tarjeta</button>
+  </div>
+
+  <script>
+    const habilidades = [];
+    let lastCanvas = null;
+
+    function agregarHabilidad() {
+      const input = document.getElementById("skillInput");
+      const habilidad = input.value.trim();
+      if (habilidad && !habilidades.includes(habilidad)) {
+        habilidades.push(habilidad);
+
+        const lista = document.getElementById("listaHabilidades");
+        const item = document.createElement("li");
+        item.textContent = habilidad;
+        lista.appendChild(item);
+
+        input.value = "";
+      }
+    }
+
+    function generarTarjeta() {
+      const fullName = document.getElementById("fullName").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const serviceTitle = document.getElementById("serviceTitle").value.trim();
+      const serviceDescription = document.getElementById("serviceDescription").value.replace(/\n/g, "<br>");
+
+      if (!fullName || !phone || !email || !serviceTitle || !serviceDescription) {
+        alert("Por favor completa todos los campos obligatorios.");
+        return;
+      }
+
+      document.getElementById("cardName").textContent = fullName;
+      document.getElementById("cardContact").textContent = `${phone} | ${email}`;
+      document.getElementById("cardServiceTitle").textContent = serviceTitle;
+      document.getElementById("cardServiceDescription").innerHTML = serviceDescription;
+
+      const skillsList = document.getElementById("cardSkills");
+      const skillsTitle = document.getElementById("skillsTitle");
+      skillsList.innerHTML = "";
+
+      if (habilidades.length > 0) {
+        skillsTitle.style.display = "block";
+        habilidades.forEach((habilidad) => {
+          const li = document.createElement("li");
+          li.textContent = habilidad;
+          skillsList.appendChild(li);
+        });
+      } else {
+        skillsTitle.style.display = "none";
+      }
+
+      const card = document.getElementById("visualCard");
+      const btnDescargar = document.getElementById("btnDescargar");
+      card.style.display = "block";
+
+      // Generar y guardar el canvas
+      setTimeout(() => {
+        html2canvas(card, { scale: 2 }).then((canvas) => {
+          lastCanvas = canvas;
+          btnDescargar.style.display = "inline-block"; // Mostrar botón de descarga
+        });
+      }, 300);
+    }
+
+    document.getElementById("btnDescargar").addEventListener("click", () => {
+      if (lastCanvas) {
+        const fullName = document.getElementById("fullName").value.trim();
+        const link = document.createElement("a");
+        link.download = `${fullName.replace(/\s+/g, "_")}_perfil.png`;
+        link.href = lastCanvas.toDataURL("image/png");
+        link.click();
+      }
+    });
+  </script>
+
+  
+  
+
+</body>
+</html>
