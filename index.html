@@ -200,13 +200,6 @@
 
   <div class="text-center mt-4">
     <button id="btnDescargar" class="btn-ios" style="max-width: 300px; display: none;">Descargar tarjeta</button>
-    <button id="btnEnviar" class="btn-ios" style="max-width: 300px; margin-top: 1rem;">Enviar tarjeta</button>
-  </div>
-
-  <!-- Marketplace Section -->
-  <div class="container mt-5">
-    <h2 class="text-center mb-4">Marketplace de Servicios Profesionales</h2>
-    <div id="marketplaceCards" class="row g-4"></div>
   </div>
 
   <script>
@@ -223,14 +216,11 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    firebase.firestore().settings({ experimentalForceLongPolling: true })
+
 
 
     const habilidades = [];
     let lastCanvas = null;
-
-    // Cargar y mostrar las tarjetas del marketplace al iniciar
-    document.addEventListener("DOMContentLoaded", mostrarMarketplace);
 
     function agregarHabilidad() {
       const input = document.getElementById("skillInput");
@@ -301,68 +291,6 @@
         link.click();
       }
     });
-
-    // Enviar tarjeta al marketplace
-    document.getElementById("btnEnviar").addEventListener("click", () => {
-      const fullName = document.getElementById("fullName").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const serviceTitle = document.getElementById("serviceTitle").value.trim();
-      const serviceDescription = document.getElementById("serviceDescription").value.trim();
-      if (!fullName || !phone || !email || !serviceTitle || !serviceDescription) {
-        alert("Por favor completa todos los campos obligatorios antes de enviar.");
-        return;
-      }
-      const card = {
-        nombre: fullName,
-        telefono: phone,
-        correo: email,
-        servicio: serviceTitle,
-        descripcion: serviceDescription,
-        habilidades: [...habilidades]
-      };
-      // Guardar en firebase
-      db.collection("marketplaceCards").add(card)
-      .then(() => {
-        mostrarMarketplace();
-        alert("¡Tarjeta enviada al marketplace!");
-        document.getElementById("formulario").reset();
-        habilidades.length = 0;
-        document.getElementById("listaHabilidades").innerHTML = "";
-      });
-    });
-
-    // Mostrar todas las tarjetas en el marketplace
-    function mostrarMarketplace() {
-      const container = document.getElementById("marketplaceCards");
-      if (!container) return;
-      db.collection("marketplaceCards").get().then((querySnapshot) => {
-        container.innerHTML = "";
-        if (querySnapshot.empty) {
-          container.innerHTML = '<div class="col-12 text-center text-muted">No hay tarjetas enviadas aún.</div>';
-          return;
-        }
-        querySnapshot.forEach((doc) => {
-          const card = doc.data();
-          const cardDiv = document.createElement("div");
-          cardDiv.className = "col-md-6 col-lg-4";
-          cardDiv.innerHTML = `
-            <div class='card-preview' style='display:block; width:100%; margin-bottom:1rem;'>
-              <div class='card-header'>
-                <h2>${card.nombre}</h2>
-                <div class='contact'>${card.telefono} | ${card.correo}</div>
-              </div>
-              <div class='card-body'>
-                <div class='section-title'>${card.servicio}</div>
-                <div class='section-text preservar-saltos'>${card.descripcion.replace(/\n/g, '<br>')}</div>
-                ${card.habilidades.length > 0 ? `<div class='section-title'>Habilidades</div><ul class='skills-list'>${card.habilidades.map(h => `<li>${h}</li>`).join("")}</ul>` : ""}
-              </div>
-            </div>
-          `;
-          container.appendChild(cardDiv);
-        });
-      });
-    }
   </script>
 
   
